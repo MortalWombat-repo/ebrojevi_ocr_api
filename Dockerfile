@@ -1,17 +1,18 @@
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y \
-    tesseract-ocr \
-    tesseract-ocr-eng \
-    tesseract-ocr-hrv \
-    tesseract-ocr-srp \
-    locales \
-    fonts-dejavu-core \
-    && locale-gen en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8 \
-    && which tesseract && tesseract --version
-    && rm -rf /var/lib/apt/lists/*
-
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      tesseract-ocr \
+      tesseract-ocr-eng \
+      tesseract-ocr-hrv \
+      tesseract-ocr-srp \
+      locales \
+      fonts-dejavu-core \
+ && locale-gen en_US.UTF-8 \
+ && update-locale LANG=en_US.UTF-8 \
+ && which tesseract && tesseract --version \
+ && rm -rf /var/lib/apt/lists/*
+ 
 # Set working directory
 WORKDIR /app
 
