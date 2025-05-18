@@ -6,7 +6,6 @@ RUN apt-get update \
       tesseract-ocr-eng \
       tesseract-ocr-hrv \
       tesseract-ocr-srp \
-      locales \
       fonts-dejavu-core \
  && which tesseract && tesseract --version \
  && rm -rf /var/lib/apt/lists/*
