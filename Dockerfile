@@ -21,12 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy app
 COPY app.py .
 
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
+EXPOSE 9696
 
-# Expose the application port
-EXPOSE $PORT
-
-# Set the entry point to start Flask with Gunicorn
-ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:$PORT", "app:app"]
+# Exec form invoking a shell to expand $PORT
+ENTRYPOINT [ "sh", "-c", "gunicorn --bind 0.0.0.0:$PORT app:app" ]
