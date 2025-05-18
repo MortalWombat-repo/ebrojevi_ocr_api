@@ -1,10 +1,7 @@
 services:
   - type: web
     name: tesseract-api
-    env: python
+    env: docker
     plan: free
     region: frankfurt
-    buildCommand: |
-      apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-hrv libtesseract-dev
-      pip install -r requirements.txt
-    startCommand: gunicorn --workers 1 --bind 0.0.0.0:$PORT app:app
+    dockerfilePath: Dockerfile
