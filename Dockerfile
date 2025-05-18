@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     && update-locale LANG=en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN tesseract --version
+
 # Set working directory
 WORKDIR /app
 
