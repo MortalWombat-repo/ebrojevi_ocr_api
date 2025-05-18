@@ -1,6 +1,5 @@
 FROM python:3.11-slim
 
-# Install Tesseract and dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-eng \
@@ -10,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     fonts-dejavu-core \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8 \
+    && tesseract --version \
     && rm -rf /var/lib/apt/lists/*
 
 RUN tesseract --version
