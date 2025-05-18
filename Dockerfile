@@ -29,7 +29,7 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
 # Expose the application port
-EXPOSE 10000
+EXPOSE $PORT
 
 # Set the entry point to start Flask with Gunicorn
 ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:$PORT", "app:app"]
