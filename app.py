@@ -13,5 +13,5 @@ def ocr():
         return jsonify({'error': 'No image uploaded'}), 400
 
     image = Image.open(file.stream)
-    text = pytesseract.image_to_string(image)
+    text = pytesseract.image_to_string(image, lang='hrv+eng')
     return jsonify({'text': text})
