@@ -10,15 +10,19 @@ import numpy as np
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def preprocess_image(pil_image):
-    image = np.array(pil_image.convert("L"))  # Grayscale
+    # Resize first to handle large images
     max_size = 1600
-    width, height = image.size
+    width, height = pil_image.size
     if width > max_size or height > max_size:
         ratio = min(max_size / width, max_size / height)
         new_size = (int(width * ratio), int(height * ratio))
-        image = image.resize(new_size, Image.Resampling.LANCZOS)
-    #image = cv2.GaussianBlur(image, (3, 3), 0)  # Smooth noise
-    #_, image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)  # Adaptive threshold
+        pil_image = pil_image.resize(new_size, Image.Resampling.LANCZOS)
+    
+    # Then convert to grayscale
+    image = np.array(pil_image.convert("L"))  # Grayscale
+    # Optional processing (uncomment if needed)
+    # image = cv2.GaussianBlur(image, (3, 3), 0)  # Smooth noise
+    # _, image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return Image.fromarray(image)
 
 app = Flask(__name__)
