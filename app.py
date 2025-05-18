@@ -3,6 +3,9 @@ import pytesseract
 from PIL import Image
 import io
 
+# Explicitly set the Tesseract binary path
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+
 app = Flask(__name__)
 
 @app.route('/ocr', methods=['POST'])
