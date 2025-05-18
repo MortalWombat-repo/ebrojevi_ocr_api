@@ -25,3 +25,13 @@ def ocr():
         return jsonify({'error': f'OCR processing failed: {str(e)}'}), 500
 
     return jsonify({'text': text})
+
+import subprocess
+
+@app.route('/debug', methods=['GET'])
+def debug_tesseract():
+    try:
+        result = subprocess.run(['tesseract', '--version'], capture_output=True, text=True)
+        return jsonify({'tesseract_version': result.stdout})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
