@@ -6,15 +6,15 @@ import io
 import subprocess
 import cv2
 import numpy as np
+import shutil
+
+pytesseract.pytesseract.tesseract_cmd = shutil.which('tesseract')
 
 def preprocess_image(pil_image):
     image = np.array(pil_image.convert("L"))  # Grayscale
     #image = cv2.GaussianBlur(image, (3, 3), 0)  # Smooth noise
     #_, image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)  # Adaptive threshold
     return Image.fromarray(image)
-
-# Explicitly set the Tesseract binary path
-pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 app = Flask(__name__)
 
