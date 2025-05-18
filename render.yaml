@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: ebrojevi-tesseract-ocr-api
+    env: python
+    buildCommand: ""
+    startCommand: bash start.sh
