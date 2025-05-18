@@ -48,7 +48,10 @@ def ocr():
 def debug_tesseract():
     try:
         result = subprocess.run(['tesseract', '--version'], capture_output=True, text=True)
-        return jsonify({'tesseract_version': result.stdout})
+        return jsonify({
+            'tesseract_version': result.stdout.strip(),
+            'tesseract_path': pytesseract.pytesseract.tesseract_cmd
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
