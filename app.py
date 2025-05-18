@@ -11,7 +11,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL, 'C.UTF-8')
 
-pytesseract.pytesseract.tesseract_cmd = shutil.which('tesseract')
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def preprocess_image(pil_image):
     image = np.array(pil_image.convert("L"))  # Grayscale
@@ -44,13 +44,16 @@ def ocr():
 
     return Response(json.dumps({'text': text}, ensure_ascii=False), mimetype='application/json')
 
+import os
 @app.route('/debug', methods=['GET'])
 def debug_tesseract():
     try:
         result = subprocess.run(['tesseract', '--version'], capture_output=True, text=True)
+        path = os.environ.get('PATH', 'PATH not set')
         return jsonify({
             'tesseract_version': result.stdout.strip(),
-            'tesseract_path': pytesseract.pytesseract.tesseract_cmd
+            'tesseract_path': pytesseract.pytesseract.tesseract_cmd,
+            'current_path': path
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
