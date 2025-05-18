@@ -48,13 +48,24 @@ import os
 @app.route('/debug', methods=['GET'])
 def debug_tesseract():
     try:
-        result = subprocess.run(['tesseract', '--version'], capture_output=True, text=True)
+        result = subprocess.run(['tesseract', '--version'], capture_output=True, text=True, check=True)
         path = os.environ.get('PATH', 'PATH not set')
         return jsonify({
             'tesseract_version': result.stdout.strip(),
             'tesseract_path': pytesseract.pytesseract.tesseract_cmd,
             'current_path': path
         })
+    except subprocess.CalledProcessError as e:
+        return jsonify({
+            'error': str(e),
+            'stderr': e.stderr,
+            'path': os.environ.get('PATH', 'PATH not set')
+        }), 500
+    except FileNotFoundError:
+        return jsonify({
+            'error': 'Tesseract executable not found',
+            'path': os.environ.get('PATH', 'PATH not set')
+        }), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
