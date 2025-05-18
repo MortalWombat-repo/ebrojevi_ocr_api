@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-eng \
     tesseract-ocr-hrv \
-    libtesseract-dev \
+    tesseract-ocr-srp \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -18,5 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy app
 COPY app.py .
 
-# Run with gunicorn
-CMD ["gunicorn", "--workers", "1", "--bind", "0.0.0.0:$PORT", "app:app"]
+# Expose the application port
+EXPOSE 9696
+
+# Set the entry point to start Flask with Gunicorn
+ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:9696", "app:app"]
