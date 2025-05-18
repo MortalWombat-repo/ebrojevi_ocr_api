@@ -6,10 +6,6 @@ import io
 import subprocess
 import cv2
 import numpy as np
-import shutil
-import locale
-
-locale.setlocale(locale.LC_ALL, 'C.UTF-8')
 
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
