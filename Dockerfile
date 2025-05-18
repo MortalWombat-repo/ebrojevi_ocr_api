@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     fonts-dejavu-core \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8 \
-    && tesseract --version \
+    RUN which tesseract && tesseract --version
     && rm -rf /var/lib/apt/lists/*
 
 RUN tesseract --version
