@@ -12,8 +12,6 @@ RUN apt-get update && apt-get install -y \
     && which tesseract && tesseract --version
     && rm -rf /var/lib/apt/lists/*
 
-RUN tesseract --version
-
 # Set working directory
 WORKDIR /app
 
