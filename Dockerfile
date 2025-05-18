@@ -8,8 +8,6 @@ RUN apt-get update \
       tesseract-ocr-srp \
       locales \
       fonts-dejavu-core \
- && locale-gen en_US.UTF-8 \
- && update-locale LANG=en_US.UTF-8 \
  && which tesseract && tesseract --version \
  && rm -rf /var/lib/apt/lists/*
  
