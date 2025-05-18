@@ -1,7 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
+import json
 import pytesseract
 from PIL import Image
 import io
+import subprocess
+import cv2
+import numpy as np
+
+def preprocess_image(pil_image):
+    image = np.array(pil_image.convert("L"))  # Grayscale
+    #image = cv2.GaussianBlur(image, (3, 3), 0)  # Smooth noise
+    #_, image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)  # Adaptive threshold
+    return Image.fromarray(image)
 
 # Explicitly set the Tesseract binary path
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
@@ -12,21 +22,24 @@ app = Flask(__name__)
 def ocr():
     file = request.files.get('image')
     if not file:
-        return jsonify({'error': 'No image uploaded'}), 400
+        return Response(json.dumps({'error': 'No image uploaded'}, ensure_ascii=False),
+                        mimetype='application/json'), 400
 
     try:
         image = Image.open(file.stream)
     except Exception as e:
-        return jsonify({'error': f'Invalid image file: {str(e)}'}), 400
+        return Response(json.dumps({'error': f'Invalid image file: {str(e)}'}, ensure_ascii=False),
+                        mimetype='application/json'), 400
+
+    image = preprocess_image(image)
 
     try:
-        text = pytesseract.image_to_string(image, lang='hrv+eng')
+        text = pytesseract.image_to_string(image, lang='eng+srp_latn+hrv', config='--psm 6')
     except Exception as e:
-        return jsonify({'error': f'OCR processing failed: {str(e)}'}), 500
+        return Response(json.dumps({'error': f'OCR processing failed: {str(e)}'}, ensure_ascii=False),
+                        mimetype='application/json'), 500
 
-    return jsonify({'text': text})
-
-import subprocess
+    return Response(json.dumps({'text': text}, ensure_ascii=False), mimetype='application/json')
 
 @app.route('/debug', methods=['GET'])
 def debug_tesseract():
@@ -35,3 +48,7 @@ def debug_tesseract():
         return jsonify({'tesseract_version': result.stdout})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/')
+def root():
+    return "Hello from Flask!"
