@@ -4,4 +4,7 @@ services:
     env: python
     plan: free
     region: frankfurt
-    startCommand: python app.py
+    buildCommand: |
+      apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-hrv
+      pip install -r requirements.txt
+    startCommand: gunicorn --workers 1 --bind 0.0.0.0:$PORT app:app
