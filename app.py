@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 import pytesseract
 from PIL import Image
 import io
-import base64
 
 app = Flask(__name__)
 
@@ -12,6 +11,14 @@ def ocr():
     if not file:
         return jsonify({'error': 'No image uploaded'}), 400
 
-    image = Image.open(file.stream)
-    text = pytesseract.image_to_string(image, lang='hrv+eng')
+    try:
+        image = Image.open(file.stream)
+    except Exception as e:
+        return jsonify({'error': f'Invalid image file: {str(e)}'}), 400
+
+    try:
+        text = pytesseract.image_to_string(image, lang='hrv+eng')
+    except Exception as e:
+        return jsonify({'error': f'OCR processing failed: {str(e)}'}), 500
+
     return jsonify({'text': text})
