@@ -22,4 +22,4 @@ COPY app.py .
 
 EXPOSE 9696
 
-ENTRYPOINT [ "sh", "-c", "gunicorn --bind 0.0.0.0:$PORT --timeout 120 app:app" ]
+ENTRYPOINT [ "sh", "-c", "gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 4 app:app" ]
