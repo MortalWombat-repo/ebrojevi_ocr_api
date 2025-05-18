@@ -5,22 +5,21 @@ RUN apt-get update \
       tesseract-ocr \
       tesseract-ocr-eng \
       tesseract-ocr-hrv \
-      tesseract-ocr-srp \
+      tesseract-ocr-srp-latn \
       fonts-dejavu-core \
+      libjpeg-dev \
+      zlib1g-dev \
+      libpng-dev \
  && which tesseract && tesseract --version \
  && rm -rf /var/lib/apt/lists/*
  
-# Set working directory
 WORKDIR /app
 
-# Copy and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app
 COPY app.py .
 
 EXPOSE 9696
 
-# Exec form invoking a shell to expand $PORT
-ENTRYPOINT [ "sh", "-c", "gunicorn --bind 0.0.0.0:$PORT app:app" ]
+ENTRYPOINT [ "sh", "-c", "gunicorn --bind 0.0.0.0:$PORT --timeout 120 app:app" ]
