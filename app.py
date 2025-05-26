@@ -10,13 +10,12 @@ import numpy as np
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def preprocess_image(pil_image):
-    # Downscale while preserving aspect ratio
-    pil_image.thumbnail((1200, 1200)) 
-    
-    # Convert to grayscale + sharpen
-    img = np.array(pil_image.convert('L'))
-    img = cv2.GaussianBlur(img, (1, 1), 0)
-    return Image.fromarray(img)
+    img = np.array(pil_image)
+    img = img[:, :, ::-1].copy()  # RGB to BGR
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+    _, binary = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    return Image.fromarray(binary)
 
 app = Flask(__name__)
 
@@ -36,7 +35,10 @@ def ocr():
     image = preprocess_image(image)
 
     try:
-        text = pytesseract.image_to_string(image, lang='eng+srp_latn+hrv', config='--psm 6')
+        text = pytesseract.image_to_string(image, lang='eng+hrv+Latin')
+        text = text.replace('£', 'E')
+        text = text.replace('€', 'E')
+        text = text.replace('Є', 'E')
     except Exception as e:
         return Response(json.dumps({'error': f'OCR processing failed: {str(e)}'}, ensure_ascii=False),
                         mimetype='application/json'), 500

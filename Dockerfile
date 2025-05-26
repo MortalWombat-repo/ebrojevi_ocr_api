@@ -6,7 +6,11 @@ RUN apt-get update \
       tesseract-ocr-eng \
       tesseract-ocr-hrv \
       tesseract-ocr-srp-latn \
+      tesseract-ocr-script-latn \
       fonts-dejavu-core \
+      fonts-liberation \
+      fonts-freefont-ttf \
+      fonts-noto-core \
       libjpeg-dev \
       zlib1g-dev \
       libpng-dev \
@@ -22,4 +26,6 @@ COPY app.py .
 
 EXPOSE 8080
 
-ENTRYPOINT [ "sh", "-c", "gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 1 --timeout 30 app:app"]
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata/
+
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "1", "--timeout", "10", "app:app"]
